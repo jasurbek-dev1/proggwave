@@ -1,0 +1,330 @@
+import { User, Post, Story, StoryGroup, ChatRoom, Message, PortfolioItem, JobPost, Player } from '@/types';
+
+// Mock Users
+export const mockUsers: User[] = [
+  {
+    id: '1',
+    username: 'startup_dev',
+    displayName: 'Startup Dev',
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop',
+    bio: 'Full-stack Developer | React & Node.js',
+    skills: ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+    role: 'Full-stack Developer',
+    postsCount: 24,
+    followersCount: 1250,
+    followingCount: 340,
+    isFollowing: false,
+    isOnline: true,
+    socialLinks: {
+      instagram: 'https://instagram.com/startup_dev',
+      github: 'https://github.com/startup_dev',
+    },
+  },
+  {
+    id: '2',
+    username: 'alice_frontend',
+    displayName: 'Alice Chen',
+    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&h=150&fit=crop',
+    bio: 'Frontend Developer | Vue.js Enthusiast',
+    skills: ['Vue.js', 'CSS', 'Figma', 'Tailwind'],
+    role: 'Frontend Developer',
+    postsCount: 18,
+    followersCount: 890,
+    followingCount: 220,
+    isFollowing: true,
+    isOnline: true,
+  },
+  {
+    id: '3',
+    username: 'bob_backend',
+    displayName: 'Bob Smith',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop',
+    bio: 'Backend Engineer | Python & Go',
+    skills: ['Python', 'Go', 'Docker', 'AWS'],
+    role: 'Backend Developer',
+    postsCount: 32,
+    followersCount: 1520,
+    followingCount: 180,
+    isFollowing: false,
+    isOnline: false,
+  },
+  {
+    id: '4',
+    username: 'charlie_devops',
+    displayName: 'Charlie Brown',
+    avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=150&h=150&fit=crop',
+    bio: 'DevOps Engineer | Kubernetes Expert',
+    skills: ['Kubernetes', 'Terraform', 'CI/CD', 'Linux'],
+    role: 'DevOps Engineer',
+    postsCount: 15,
+    followersCount: 670,
+    followingCount: 145,
+    isFollowing: true,
+    isOnline: true,
+  },
+  {
+    id: '5',
+    username: 'diana_ux',
+    displayName: 'Diana Miller',
+    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop',
+    bio: 'UX Designer | Creating delightful experiences',
+    skills: ['Figma', 'Sketch', 'Prototyping', 'Research'],
+    role: 'UX Designer',
+    postsCount: 28,
+    followersCount: 2100,
+    followingCount: 410,
+    isFollowing: false,
+    isOnline: true,
+  },
+];
+
+// Current logged in user
+export const currentUser: User = {
+  id: '0',
+  username: 'dev_hero',
+  displayName: 'Dev Hero',
+  avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop',
+  bio: 'Building awesome apps | React & TypeScript',
+  skills: ['React', 'TypeScript', 'Next.js', 'Tailwind CSS'],
+  role: 'Frontend Developer',
+  postsCount: 12,
+  followersCount: 256,
+  followingCount: 180,
+  isFollowing: false,
+  isOnline: true,
+  socialLinks: {
+    instagram: 'https://instagram.com/dev_hero',
+    github: 'https://github.com/dev_hero',
+    linkedin: 'https://linkedin.com/in/dev_hero',
+  },
+};
+
+// Mock Posts
+export const mockPosts: Post[] = [
+  {
+    id: 'p1',
+    userId: '2',
+    user: mockUsers[1],
+    type: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=600&fit=crop',
+    caption: 'Working on a new Vue.js component library! 🚀 Building something amazing for the community.',
+    likesCount: 142,
+    commentsCount: 23,
+    isLiked: false,
+    isSaved: false,
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+    comments: [],
+  },
+  {
+    id: 'p2',
+    userId: '3',
+    user: mockUsers[2],
+    type: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&h=600&fit=crop',
+    caption: 'New backend architecture design. Microservices FTW! 💪',
+    likesCount: 89,
+    commentsCount: 15,
+    isLiked: true,
+    isSaved: true,
+    createdAt: new Date(Date.now() - 7200000).toISOString(),
+    comments: [],
+  },
+  {
+    id: 'p3',
+    userId: '4',
+    user: mockUsers[3],
+    type: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=600&fit=crop',
+    caption: 'Kubernetes deployment successful! 100+ pods running smoothly 🎉',
+    likesCount: 256,
+    commentsCount: 42,
+    isLiked: false,
+    isSaved: false,
+    createdAt: new Date(Date.now() - 14400000).toISOString(),
+    comments: [],
+  },
+  {
+    id: 'p4',
+    userId: '5',
+    user: mockUsers[4],
+    type: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=600&h=600&fit=crop',
+    caption: 'New mobile app design concept. What do you think? 📱✨',
+    likesCount: 312,
+    commentsCount: 56,
+    isLiked: true,
+    isSaved: false,
+    createdAt: new Date(Date.now() - 28800000).toISOString(),
+    comments: [],
+  },
+  {
+    id: 'p5',
+    userId: '1',
+    user: mockUsers[0],
+    type: 'image',
+    mediaUrl: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=600&fit=crop',
+    caption: 'Clean code is happy code! Refactoring session complete 🧹',
+    likesCount: 178,
+    commentsCount: 28,
+    isLiked: false,
+    isSaved: true,
+    createdAt: new Date(Date.now() - 43200000).toISOString(),
+    comments: [],
+  },
+];
+
+// Mock Stories
+export const mockStoryGroups: StoryGroup[] = mockUsers.slice(0, 5).map((user, idx) => ({
+  user,
+  stories: [
+    {
+      id: `s${idx + 1}`,
+      userId: user.id,
+      user,
+      mediaUrl: `https://images.unsplash.com/photo-${1550000000000 + idx * 10000}?w=400&h=700&fit=crop`,
+      createdAt: new Date(Date.now() - idx * 3600000).toISOString(),
+      expiresAt: new Date(Date.now() + 86400000).toISOString(),
+      viewed: idx > 2,
+    },
+  ],
+  hasUnviewed: idx <= 2,
+}));
+
+// Add current user's add story option
+export const addStoryPlaceholder: StoryGroup = {
+  user: currentUser,
+  stories: [],
+  hasUnviewed: false,
+};
+
+// Mock Chat Rooms
+export const mockChatRooms: ChatRoom[] = mockUsers.slice(0, 4).map((user, idx) => ({
+  id: `chat${idx + 1}`,
+  type: 'private' as const,
+  participant: user,
+  lastMessage: {
+    id: `msg${idx}`,
+    chatRoomId: `chat${idx + 1}`,
+    senderId: idx % 2 === 0 ? user.id : currentUser.id,
+    content: ['Hey, how are you?', 'Check out this new feature!', 'Let\'s collaborate!', 'Great work on the project!'][idx],
+    type: 'text' as const,
+    createdAt: new Date(Date.now() - idx * 1800000).toISOString(),
+    isRead: idx > 1,
+  },
+  unreadCount: idx < 2 ? idx + 1 : 0,
+  updatedAt: new Date(Date.now() - idx * 1800000).toISOString(),
+}));
+
+// Mock Messages for a chat
+export const mockMessages: Message[] = [
+  {
+    id: 'm1',
+    chatRoomId: 'chat1',
+    senderId: '2',
+    content: 'Hey! How are you doing?',
+    type: 'text',
+    createdAt: new Date(Date.now() - 3600000).toISOString(),
+    isRead: true,
+  },
+  {
+    id: 'm2',
+    chatRoomId: 'chat1',
+    senderId: '0',
+    content: 'I\'m great! Working on a new project 🚀',
+    type: 'text',
+    createdAt: new Date(Date.now() - 3000000).toISOString(),
+    isRead: true,
+  },
+  {
+    id: 'm3',
+    chatRoomId: 'chat1',
+    senderId: '2',
+    content: 'That sounds awesome! What stack are you using?',
+    type: 'text',
+    createdAt: new Date(Date.now() - 2400000).toISOString(),
+    isRead: true,
+  },
+  {
+    id: 'm4',
+    chatRoomId: 'chat1',
+    senderId: '0',
+    content: 'React + TypeScript + Tailwind CSS',
+    type: 'text',
+    createdAt: new Date(Date.now() - 1800000).toISOString(),
+    isRead: true,
+  },
+];
+
+// Mock Portfolio Items
+export const mockPortfolioItems: PortfolioItem[] = [
+  {
+    id: 'pf1',
+    userId: '0',
+    title: 'E-commerce Platform',
+    description: 'Full-stack e-commerce solution with React and Node.js',
+    imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400&h=300&fit=crop',
+    link: 'https://github.com/example/ecommerce',
+    technologies: ['React', 'Node.js', 'PostgreSQL'],
+    createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
+  },
+  {
+    id: 'pf2',
+    userId: '0',
+    title: 'Task Management App',
+    description: 'Collaborative task management with real-time updates',
+    imageUrl: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop',
+    link: 'https://github.com/example/taskapp',
+    technologies: ['Vue.js', 'Firebase', 'Vuetify'],
+    createdAt: new Date(Date.now() - 86400000 * 60).toISOString(),
+  },
+];
+
+// Mock Job Posts
+export const mockJobPosts: JobPost[] = [
+  {
+    id: 'j1',
+    title: 'Senior Frontend Developer (React)',
+    company: 'TechStartup Inc',
+    location: 'Tashkent',
+    type: 'hybrid',
+    description: 'Looking for an experienced React developer to join our team.',
+    requirements: ['3+ years React', 'TypeScript', 'Team player'],
+    salary: '$3000-5000',
+    createdAt: new Date(Date.now() - 7200000).toISOString(),
+  },
+  {
+    id: 'j2',
+    title: 'Backend Engineer (Python)',
+    company: 'DataTech',
+    location: 'Remote',
+    type: 'remote',
+    description: 'Join our data engineering team to build scalable APIs.',
+    requirements: ['Python', 'FastAPI/Django', 'PostgreSQL'],
+    salary: '$4000-6000',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: 'j3',
+    title: 'Mobile Developer (React Native)',
+    company: 'AppMakers',
+    location: 'Samarkand',
+    type: 'onsite',
+    description: 'Build cross-platform mobile apps for millions of users.',
+    requirements: ['React Native', 'iOS/Android', 'REST APIs'],
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+];
+
+// Mock Leaderboard Players
+export const mockPlayers: Player[] = [
+  { id: 'pl1', username: 'BekhruzDev', rating: 1780, wins: 45, losses: 12, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop' },
+  { id: 'pl2', username: 'LayloCoder', rating: 1720, wins: 38, losses: 15, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop' },
+  { id: 'pl3', username: 'RustamX', rating: 1690, wins: 35, losses: 18, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop' },
+  { id: 'pl4', username: 'AnvarPro', rating: 1650, wins: 32, losses: 20, avatar: 'https://images.unsplash.com/photo-1599566150163-29194dcabd36?w=100&h=100&fit=crop' },
+  { id: 'pl5', username: 'JamshidAI', rating: 1600, wins: 28, losses: 22, avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop' },
+  { id: 'pl6', username: 'SardorJS', rating: 1580, wins: 26, losses: 24, avatar: 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=100&h=100&fit=crop' },
+  { id: 'pl7', username: 'UmarRust', rating: 1550, wins: 24, losses: 26, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop' },
+  { id: 'pl8', username: 'MalikaUX', rating: 1530, wins: 22, losses: 28, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop' },
+  { id: 'pl9', username: 'DavronPy', rating: 1500, wins: 20, losses: 30, avatar: 'https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=100&h=100&fit=crop' },
+  { id: 'pl10', username: 'SarvarGO', rating: 1480, wins: 18, losses: 32, avatar: 'https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=100&h=100&fit=crop' },
+];
