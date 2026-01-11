@@ -18,6 +18,7 @@ export interface User {
     github?: string;
     linkedin?: string;
   };
+  
 }
 
 // Post types

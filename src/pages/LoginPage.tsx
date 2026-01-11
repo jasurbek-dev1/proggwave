@@ -68,11 +68,13 @@ export function LoginPage({
   const t = translations[lang];
 
   const handleGoogleLogin = () => {
-    console.log('TODO: Implement Google OAuth');
+    // GET /api/auth/google
+    window.location.href = 'https://proggwave.uz/api/auth/google';
   };
 
   const handleGithubLogin = () => {
-    console.log('TODO: Implement GitHub OAuth');
+    // GET /api/auth/github (bu yo'q Swagger'da, lekin saqlab qoldik)
+    console.log('GitHub OAuth not configured yet');
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -91,7 +93,10 @@ export function LoginPage({
 
     try {
       await login({ username, password });
-      navigate('/');
+      // Login muvaffaqiyatli - navigate qilish
+      setTimeout(() => {
+        navigate('/');
+      }, 100);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed');
     }
@@ -213,5 +218,3 @@ export function LoginPage({
     </div>
   );
 }
-
-export default LoginPage;

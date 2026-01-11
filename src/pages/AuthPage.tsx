@@ -1,3 +1,5 @@
+// src/pages/AuthPage.tsx
+
 import { useState } from 'react';
 import { LoginPage } from './LoginPage';
 import { SignupFlow } from './SignupFlow';
@@ -13,11 +15,13 @@ export function AuthPage() {
 
   return (
     <>
-      <LoginPage
-        onOpenSignup={() => setShowSignup(true)}
-        initialUsername={loginCredentials.username}
-        initialPassword={loginCredentials.password}
-      />
+      {!showSignup && (
+        <LoginPage
+          onOpenSignup={() => setShowSignup(true)}
+          initialUsername={loginCredentials.username}
+          initialPassword={loginCredentials.password}
+        />
+      )}
       {showSignup && (
         <SignupFlow
           onClose={() => setShowSignup(false)}

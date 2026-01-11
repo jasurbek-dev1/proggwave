@@ -25,7 +25,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Restore session on mount
+  // Sessiyani tiklash
   useEffect(() => {
     const restoreSession = async () => {
       try {
@@ -34,22 +34,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         
         if (token && savedUser) {
           const parsedAuthUser = JSON.parse(savedUser) as AuthUser;
-          const currentUser = await authService.getCurrentUser(token);
           
-          if (currentUser) {
-            setAuthUser(parsedAuthUser);
-            setUser(currentUser);
-            setIsAuthenticated(true);
-          } else {
-            // Token invalid, clear storage
-            localStorage.removeItem(AUTH_TOKEN_KEY);
-            localStorage.removeItem(AUTH_USER_KEY);
-          }
+          setAuthUser(parsedAuthUser);
+          setUser({
+            id: parsedAuthUser.id,
+            username: parsedAuthUser.username,
+            displayName: parsedAuthUser.username.replace(/[._]dev$/, ''),
+            avatar: parsedAuthUser.avatar_url || `https://ui-avatars.com/api/?name=${parsedAuthUser.username}&size=150`,
+            bio: parsedAuthUser.bio || '',
+            skills: parsedAuthUser.skills || [],
+            role: parsedAuthUser.role === 'employer' ? 'Employer' : 'Job Seeker',
+            postsCount: 0,
+            followersCount: 0,
+            followingCount: 0,
+            isFollowing: false,
+            isOnline: true,
+            socialLinks: {},
+          });
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error('Failed to restore session:', error);
-        localStorage.removeItem(AUTH_TOKEN_KEY);
-        localStorage.removeItem(AUTH_USER_KEY);
+        localStorage.clear();
       } finally {
         setIsLoading(false);
       }
@@ -63,17 +69,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       const result = await authService.login(credentials);
       
-      // Save to localStorage
-      localStorage.setItem(AUTH_TOKEN_KEY, result.token);
-      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(result.user));
-      
       setAuthUser(result.user);
       setUser(result.appUser);
       setIsAuthenticated(true);
       
       toast.success(`Xush kelibsiz, ${result.user.username}!`);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Login failed';
+      const message = error instanceof Error ? error.message : 'Login muvaffaqiyatsiz';
       toast.error(message);
       throw error;
     } finally {
@@ -84,11 +86,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const register = useCallback(async (data: RegisterData) => {
     setIsLoading(true);
     try {
-      const result = await authService.register(data);
-      toast.success('Ro\'yxatdan o\'tish muvaffaqiyatli!');
-      return { username: result.user.username, password: data.password };
+      await authService.register(data);
+      
+      // Register muvaffaqiyatli, login qilish uchun credentials qaytarish
+      toast.success('Ro\'yxatdan o\'tish muvaffaqiyatli! Iltimos login qiling.');
+      
+      return { 
+        username: data.nickname, 
+        password: data.password 
+      };
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Registration failed';
+      const message = error instanceof Error ? error.message : 'Ro\'yxatdan o\'tish muvaffaqiyatsiz';
       toast.error(message);
       throw error;
     } finally {
@@ -97,8 +105,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(AUTH_USER_KEY);
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (token) {
+      authService.logout(token).catch(console.error);
+    }
+    
     setUser(null);
     setAuthUser(null);
     setIsAuthenticated(false);
@@ -114,7 +125,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUser(updatedUser);
       toast.success('Profil yangilandi');
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Update failed';
+      const message = error instanceof Error ? error.message : 'Yangilash muvaffaqiyatsiz';
       toast.error(message);
       throw error;
     } finally {
